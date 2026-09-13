@@ -189,6 +189,15 @@
       border:none; border-radius:12px; cursor:pointer; font-family:'Inter',sans-serif;
     }
     .settings-card .btn:disabled { opacity:.6; }
+    .settings-card h3 { margin-top:22px; }
+    .theme-grid { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    .theme-swatch {
+      flex:1; min-width:100px; cursor:pointer; text-align:center;
+      padding:4px; border-radius:14px; border:2px solid transparent;
+    }
+    .theme-swatch.selected { border-color:#e6b422; }
+    .swatch-preview { width:100%; height:46px; border-radius:10px; border:1px solid rgba(201,162,39,.3); }
+    .swatch-label { font-size:11px; color:#d8c3a5; margin-top:6px; line-height:1.4; }
   </style>
 </head>
 <body>
@@ -244,6 +253,23 @@
       <div class="toggle-row">
         <div><div class="tr-label">Entry scanner</div><div class="tr-sub">Door check-in QR scanner</div></div>
         <label class="switch"><input type="checkbox" id="toggleScanner"><span class="slider"></span></label>
+      </div>
+
+      <h3>Website theme</h3>
+      <div class="note">Changes the background color mood on the public homepage only.</div>
+      <div class="theme-grid" id="themeGrid">
+        <div class="theme-swatch selected" data-theme="maroon-gold" onclick="selectTheme('maroon-gold')">
+          <div class="swatch-preview" style="background:linear-gradient(135deg,#3a0d1a,#12040a);"></div>
+          <div class="swatch-label">Maroon &amp; Gold</div>
+        </div>
+        <div class="theme-swatch" data-theme="royal-purple" onclick="selectTheme('royal-purple')">
+          <div class="swatch-preview" style="background:linear-gradient(135deg,#3a1656,#0a0512);"></div>
+          <div class="swatch-label">Royal Purple &amp; Gold</div>
+        </div>
+        <div class="theme-swatch" data-theme="emerald-gold" onclick="selectTheme('emerald-gold')">
+          <div class="swatch-preview" style="background:linear-gradient(135deg,#163a24,#030a07);"></div>
+          <div class="swatch-label">Emerald &amp; Gold</div>
+        </div>
       </div>
 
       <button class="btn" id="saveSettingsBtn" onclick="saveSettings()">Save changes</button>
@@ -362,6 +388,14 @@
     }
 
     // ---------- Site settings ----------
+    let selectedTheme = 'maroon-gold';
+
+    function selectTheme(t) {
+      selectedTheme = t;
+      document.querySelectorAll('.theme-swatch').forEach(el =>
+        el.classList.toggle('selected', el.getAttribute('data-theme') === t));
+    }
+
     function loadSettings() {
       fetch(API + '?getsettings=1')
         .then(r => r.json())
@@ -370,6 +404,7 @@
           document.getElementById('toggleBooking').checked = s.booking_enabled === 'true';
           document.getElementById('toggleTeam').checked    = s.team_enabled === 'true';
           document.getElementById('toggleScanner').checked = s.scanner_enabled === 'true';
+          selectTheme(s.theme || 'maroon-gold');
         })
         .catch(() => toast('Could not load settings'));
     }
@@ -381,7 +416,8 @@
         'action=updatesettings&pw=' + encodeURIComponent(PW) +
         '&booking_enabled=' + document.getElementById('toggleBooking').checked +
         '&team_enabled=' + document.getElementById('toggleTeam').checked +
-        '&scanner_enabled=' + document.getElementById('toggleScanner').checked;
+        '&scanner_enabled=' + document.getElementById('toggleScanner').checked +
+        '&theme=' + encodeURIComponent(selectedTheme);
       fetch(API + '?' + qs)
         .then(r => r.json())
         .then(res => {
