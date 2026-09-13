@@ -152,6 +152,43 @@
     }
     .toast.show { opacity:1; }
     .hidden { display:none; }
+
+    /* ---------- Settings panel ---------- */
+    .settings-card {
+      max-width:460px; margin:12px auto 0; padding:18px 16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012));
+      border:1px solid rgba(201,162,39,.25); border-radius:16px;
+    }
+    .settings-card h3 {
+      font-family:'Playfair Display',serif; font-size:16px; color:#e6b422;
+    }
+    .settings-card .note { font-size:12px; color:#8f7a5e; margin-top:4px; margin-bottom:6px; }
+    .toggle-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 2px; border-bottom:1px solid rgba(201,162,39,.15);
+    }
+    .toggle-row:last-of-type { border-bottom:none; }
+    .toggle-row .tr-label { font-size:14.5px; font-weight:600; color:#f5e9da; }
+    .toggle-row .tr-sub { font-size:12px; color:#c9b394; margin-top:3px; }
+    .switch { position:relative; width:50px; height:28px; flex:0 0 auto; }
+    .switch input { opacity:0; width:0; height:0; }
+    .switch .slider {
+      position:absolute; inset:0; background:rgba(255,255,255,.15);
+      border-radius:999px; cursor:pointer; transition:.2s;
+      border:1.5px solid rgba(201,162,39,.35);
+    }
+    .switch .slider:before {
+      content:''; position:absolute; width:20px; height:20px; left:2px; top:2px;
+      background:#f5e9da; border-radius:50%; transition:.2s;
+    }
+    .switch input:checked + .slider { background:linear-gradient(180deg,#f2ca5a,#e6b422); border-color:transparent; }
+    .switch input:checked + .slider:before { transform:translateX(21px); background:#2b0a12; }
+    .settings-card .btn {
+      width:100%; margin-top:16px; padding:14px; font-size:14.5px; font-weight:700;
+      color:#2b0a12; background:linear-gradient(180deg,#f2ca5a,#e6b422);
+      border:none; border-radius:12px; cursor:pointer; font-family:'Inter',sans-serif;
+    }
+    .settings-card .btn:disabled { opacity:.6; }
   </style>
 </head>
 <body>
@@ -182,14 +219,35 @@
         To Send <span class="badge green hidden" id="badge-tosend">0</span>
       </div>
       <div class="tab" id="tab-all" onclick="switchTab('all')">All</div>
+      <div class="tab" id="tab-settings" onclick="switchTab('settings')">Settings</div>
     </div>
 
-    <div class="search">
+    <div class="search" id="searchWrap">
       <span class="sicon">🔍</span>
       <input id="searchBox" placeholder="Search name, number or ref…" oninput="render()">
     </div>
 
     <div class="list" id="list"><div class="loading"><span class="spin">⏳</span> Loading…</div></div>
+
+    <div class="settings-card hidden" id="settingsPanel">
+      <h3>Site pages</h3>
+      <div class="note">Turn customer-facing tools on or off without touching code. Visitors see a "closed" message while a page is off.</div>
+
+      <div class="toggle-row">
+        <div><div class="tr-label">Booking page</div><div class="tr-sub">Public ticket booking form</div></div>
+        <label class="switch"><input type="checkbox" id="toggleBooking"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><div class="tr-label">Team phone-booking tool</div><div class="tr-sub">Staff-only, password protected either way</div></div>
+        <label class="switch"><input type="checkbox" id="toggleTeam"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><div class="tr-label">Entry scanner</div><div class="tr-sub">Door check-in QR scanner</div></div>
+        <label class="switch"><input type="checkbox" id="toggleScanner"><span class="slider"></span></label>
+      </div>
+
+      <button class="btn" id="saveSettingsBtn" onclick="saveSettings()">Save changes</button>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -292,9 +350,48 @@
     // ---------- Tabs ----------
     function switchTab(t) {
       currentTab = t;
-      ['pending','tosend','all'].forEach(x =>
+      ['pending','tosend','all','settings'].forEach(x =>
         document.getElementById('tab-' + x).classList.toggle('active', x === t));
-      render();
+
+      document.getElementById('searchWrap').classList.toggle('hidden', t === 'settings');
+      document.getElementById('list').classList.toggle('hidden', t === 'settings');
+      document.getElementById('settingsPanel').classList.toggle('hidden', t !== 'settings');
+
+      if (t === 'settings') loadSettings();
+      else render();
+    }
+
+    // ---------- Site settings ----------
+    function loadSettings() {
+      fetch(API + '?getsettings=1')
+        .then(r => r.json())
+        .then(s => {
+          if (!s.ok) return;
+          document.getElementById('toggleBooking').checked = s.booking_enabled === 'true';
+          document.getElementById('toggleTeam').checked    = s.team_enabled === 'true';
+          document.getElementById('toggleScanner').checked = s.scanner_enabled === 'true';
+        })
+        .catch(() => toast('Could not load settings'));
+    }
+
+    function saveSettings() {
+      const btn = document.getElementById('saveSettingsBtn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+      const qs =
+        'action=updatesettings&pw=' + encodeURIComponent(PW) +
+        '&booking_enabled=' + document.getElementById('toggleBooking').checked +
+        '&team_enabled=' + document.getElementById('toggleTeam').checked +
+        '&scanner_enabled=' + document.getElementById('toggleScanner').checked;
+      fetch(API + '?' + qs)
+        .then(r => r.json())
+        .then(res => {
+          btn.disabled = false; btn.textContent = 'Save changes';
+          toast(res.ok ? '✅ Settings saved' : '⚠️ ' + (res.msg || 'Failed to save'));
+        })
+        .catch(() => {
+          btn.disabled = false; btn.textContent = 'Save changes';
+          toast('Connection problem');
+        });
     }
 
     // ---------- Render ----------

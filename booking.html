@@ -3,21 +3,238 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Booking Closed · Sisters Squad</title>
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sisterssquadevent.events/booking">
+  <meta property="og:title" content="Book tickets · बाईपण भारी नाईट 3.0">
+  <meta property="og:description" content="Sunday, 6 September 2026 · 6 PM · Balaji Garden Lawn, Kolhapur. Adult ₹500 · Kid ₹200. Meal included.">
+  <meta property="og:image" content="https://sisterssquadevent.events/social-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Book tickets · बाईपण भारी नाईट 3.0">
+  <meta name="twitter:description" content="Sunday, 6 September 2026 · 6 PM · Balaji Garden Lawn, Kolhapur. Adult ₹500 · Kid ₹200. Meal included.">
+  <meta name="twitter:image" content="https://sisterssquadevent.events/social-preview.png">
+  <title>Book Tickets · Sisters Squad</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    html { background:#12040a; min-height:100%; }
+
     body {
       min-height:100vh;
       font-family:'Inter',sans-serif;
       background:radial-gradient(ellipse at top, #3a0d1a 0%, #2b0a12 40%, #12040a 100%);
       color:#f5e9da;
-      display:flex; align-items:center; justify-content:center;
-      padding:24px;
+      display:flex; flex-direction:column; align-items:center;
+      padding:0 16px 48px;
       touch-action: manipulation;
     }
+
+    /* ---------- Header ---------- */
+    .header { text-align:center; padding:34px 0 22px; }
+    .header .org {
+      font-size:11px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#c9a227;
+    }
+    .header .event {
+      font-family:'Playfair Display',serif;
+      font-size:34px; font-weight:700; color:#e6b422;
+      margin-top:8px; line-height:1.2;
+      text-shadow:0 2px 16px rgba(230,180,34,.3);
+    }
+    .header .tag {
+      font-family:'Playfair Display',serif; font-style:italic;
+      font-size:15px; color:#d8c3a5; margin-top:8px;
+    }
+    .meta {
+      margin-top:14px; font-size:13px; color:#c9b394; line-height:1.9;
+    }
+    .meta b { color:#e6b422; font-weight:600; }
+    .divider {
+      width:70px; height:2px; margin:18px auto 0;
+      background:linear-gradient(90deg, transparent, #c9a227, transparent);
+    }
+
+    /* ---------- Card ---------- */
+    .card {
+      width:100%; max-width:420px;
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+      border:1px solid rgba(201,162,39,.35);
+      border-radius:22px;
+      padding:26px 22px;
+      margin-top:22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      backdrop-filter:blur(6px);
+    }
+    .card h2 {
+      font-family:'Playfair Display',serif; font-size:19px; color:#e6b422;
+      text-align:center; margin-bottom:20px; font-weight:600;
+    }
+
+    /* ---------- Inputs ---------- */
+    .field { margin-bottom:16px; }
+    .field label {
+      display:block; font-size:11px; font-weight:600; letter-spacing:1.5px;
+      text-transform:uppercase; color:#b39b74; margin-bottom:7px;
+    }
+    .field input {
+      width:100%; padding:14px 16px; font-size:16px; font-family:'Inter',sans-serif;
+      color:#f5e9da; background:rgba(0,0,0,.35);
+      border:1.5px solid rgba(201,162,39,.3); border-radius:12px; outline:none;
+      transition:border-color .2s;
+    }
+    .field input:focus { border-color:#e6b422; }
+    .field input::placeholder { color:#7a6a55; }
+
+    /* ---------- Ticket steppers ---------- */
+    .ticket-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 4px; border-bottom:1px solid rgba(201,162,39,.15);
+    }
+    .ticket-row:last-of-type { border-bottom:none; }
+    .ticket-info .t-name { font-size:16px; font-weight:600; color:#f5e9da; }
+    .ticket-info .t-price { font-size:13px; color:#c9a227; margin-top:3px; }
+    .stepper { display:flex; align-items:center; gap:14px; }
+    .stepper button {
+      width:40px; height:40px; border-radius:50%;
+      font-size:20px; font-weight:600; cursor:pointer;
+      color:#e6b422; background:transparent;
+      border:1.5px solid rgba(201,162,39,.5);
+      transition:all .15s;
+      font-family:'Inter',sans-serif;
+    }
+    .stepper button:active { background:rgba(201,162,39,.2); transform:scale(.92); }
+    .stepper button:disabled { opacity:.25; cursor:default; }
+    .stepper .count {
+      min-width:26px; text-align:center; font-size:20px; font-weight:700; color:#fff;
+    }
+
+    /* ---------- Total ---------- */
+    .total {
+      margin-top:18px; padding:18px;
+      background:rgba(201,162,39,.08);
+      border:1px solid rgba(201,162,39,.35); border-radius:14px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .total .lbl { font-size:13px; letter-spacing:2px; text-transform:uppercase; color:#b39b74; }
+    .total .amt {
+      font-family:'Playfair Display',serif; font-size:30px; font-weight:700; color:#e6b422;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display:block; width:100%; margin-top:20px; padding:16px;
+      font-family:'Inter',sans-serif; font-size:16px; font-weight:700; text-align:center;
+      color:#2b0a12; background:linear-gradient(180deg, #f2ca5a, #e6b422);
+      border:none; border-radius:14px; cursor:pointer; text-decoration:none;
+      box-shadow:0 8px 24px rgba(230,180,34,.35);
+      transition:transform .12s;
+    }
+    .btn:active { transform:scale(.98); }
+    .btn.green {
+      color:#fff; background:linear-gradient(180deg, #2fae62, #1f8a4a);
+      box-shadow:0 8px 24px rgba(47,174,98,.35);
+    }
+    .btn.ghost {
+      background:transparent; color:#e6b422; box-shadow:none;
+      border:1.5px solid rgba(201,162,39,.5);
+    }
+    .btn:disabled { opacity:.5; }
+
+    .err {
+      margin-top:14px; padding:12px 16px; border-radius:10px;
+      background:rgba(163,36,36,.25); border:1px solid rgba(220,80,80,.5);
+      color:#ffd9d9; font-size:14px; text-align:center; display:none;
+    }
+
+    /* ---------- Payment screen ---------- */
+    .pay-block {
+      text-align:center; padding:24px 18px;
+      background:linear-gradient(180deg, rgba(230,180,34,.16), rgba(230,180,34,.05));
+      border:2px solid rgba(230,180,34,.5); border-radius:18px;
+      margin-bottom:14px;
+    }
+    .pay-block .pb-lbl {
+      font-size:11px; letter-spacing:3px; text-transform:uppercase;
+      color:#c9a227; font-weight:600;
+    }
+    .pay-block .pb-amt {
+      font-family:'Playfair Display',serif; font-size:54px; font-weight:700;
+      color:#e6b422; line-height:1.05; margin-top:6px;
+      text-shadow:0 3px 20px rgba(230,180,34,.35);
+    }
+
+    .upi-block {
+      text-align:center; padding:22px 18px;
+      background:rgba(0,0,0,.35);
+      border:1.5px solid rgba(201,162,39,.4); border-radius:18px;
+    }
+    .upi-block .ub-lbl {
+      font-size:11px; letter-spacing:3px; text-transform:uppercase;
+      color:#c9a227; font-weight:600;
+    }
+    .upi-block .ub-id {
+      font-family:'Inter',sans-serif; font-size:20px; font-weight:700;
+      color:#fff; margin-top:10px; word-break:break-all;
+      user-select:all; -webkit-user-select:all; line-height:1.4;
+    }
+    .upi-block .ub-sep {
+      font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:#8f7a5e;
+      margin:22px 0 10px;
+    }
+    .upi-block .ub-phone {
+      font-family:'Inter',sans-serif; font-size:20px; font-weight:700;
+      color:#fff; user-select:all; -webkit-user-select:all; letter-spacing:1px;
+    }
+    .upi-block .ub-name {
+      font-size:13.5px; color:#c9b394; margin-top:20px;
+      padding-top:16px; border-top:1px solid rgba(201,162,39,.2);
+    }
+    .copy-btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:7px;
+      margin-top:14px; padding:12px 26px;
+      font-family:'Inter',sans-serif; font-size:14.5px; font-weight:700;
+      color:#2b0a12; background:linear-gradient(180deg,#f2ca5a,#e6b422);
+      border:none; border-radius:11px; cursor:pointer;
+    }
+    .copy-btn.done {
+      color:#fff; background:linear-gradient(180deg,#3ec468,#25a052);
+    }
+    .copy-btn.ghost-copy {
+      color:#e6b422; background:transparent;
+      border:1.5px solid rgba(201,162,39,.5);
+    }
+    .copy-btn.ghost-copy.done {
+      color:#fff; background:linear-gradient(180deg,#3ec468,#25a052); border-color:transparent;
+    }
+
+    .ref-line {
+      text-align:center; margin-top:18px; font-size:13.5px; color:#c9b394;
+    }
+    .ref-line b {
+      font-family:'Playfair Display',serif; font-size:19px; color:#e6b422;
+      letter-spacing:1.5px;
+    }
+
+    /* ---------- Done screen ---------- */
+    .done-icon { font-size:52px; text-align:center; }
+    .done-title {
+      font-family:'Playfair Display',serif; font-size:24px; color:#e6b422;
+      text-align:center; margin-top:12px;
+    }
+    .done-text { text-align:center; font-size:14.5px; color:#d8c3a5; margin-top:12px; line-height:1.8; }
+
+    .footer {
+      margin-top:34px; font-size:11.5px; color:#8a7358; text-align:center; line-height:2;
+      letter-spacing:.5px;
+    }
+    .hidden { display:none; }
+
+    /* ---------- Closed / loading ---------- */
+    .gateScreen { min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .loadingText { color:#c9a227; font-size:14px; letter-spacing:1px; }
     .box { max-width:420px; text-align:center; }
     .box .org { font-size:11px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#c9a227; }
     .box h1 { font-family:'Playfair Display',serif; font-size:28px; color:#e6b422; margin-top:14px; }
@@ -28,13 +245,293 @@
       border-radius:12px; text-decoration:none;
     }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G846JJ5PXQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G846JJ5PXQ');
+  </script>
 </head>
 <body>
-  <div class="box">
-    <div class="org">Sisters Squad</div>
-    <h1>Booking is currently closed</h1>
-    <p>बाईपण भारी नाईट 3.0 has concluded and there is no active event open for booking right now. Check back on our home page for future events.</p>
-    <a href="/">Back to home</a>
+
+  <div id="loadingGate" class="gateScreen">
+    <div class="loadingText">Loading…</div>
   </div>
+
+  <div id="closedMsg" class="gateScreen hidden">
+    <div class="box">
+      <div class="org">Sisters Squad</div>
+      <h1>Booking is currently closed</h1>
+      <p>बाईपण भारी नाईट 3.0 has concluded and there is no active event open for booking right now. Check back on our home page for future events.</p>
+      <a href="/">Back to home</a>
+    </div>
+  </div>
+
+  <div id="pageContent" class="hidden">
+
+    <div class="header">
+      <div class="org">Organized by Sisters Squad</div>
+      <div class="event">बाईपण भारी नाईट 3.0</div>
+      <div class="tag">An Exclusive Women's Cultural Evening</div>
+      <div class="meta">
+        <b>Sunday, 6 September 2026</b> · 6 PM onwards<br>
+        Balaji Garden Lawn, Nagla Park, Kolhapur · Meal included
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <!-- ============ SCREEN 1: BOOKING ============ -->
+    <div class="card" id="screenBook">
+      <h2>Book Your Tickets</h2>
+
+      <div class="field">
+        <label>Full name (printed on your pass)</label>
+        <input id="name" placeholder="e.g. Sunita Patil" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>Mobile number (WhatsApp)</label>
+        <input id="phone" placeholder="10-digit number" inputmode="numeric" maxlength="10" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label>Email (optional)</label>
+        <input id="email" placeholder="Only if you have one" inputmode="email" autocomplete="email">
+      </div>
+
+      <div class="ticket-row">
+        <div class="ticket-info">
+          <div class="t-name">Adult</div>
+          <div class="t-price">₹500 per ticket</div>
+        </div>
+        <div class="stepper">
+          <button id="aMinus" onclick="step('a',-1)">−</button>
+          <div class="count" id="aCount">1</div>
+          <button id="aPlus" onclick="step('a',1)">+</button>
+        </div>
+      </div>
+      <div class="ticket-row">
+        <div class="ticket-info">
+          <div class="t-name">Kid</div>
+          <div class="t-price">₹200 per ticket</div>
+        </div>
+        <div class="stepper">
+          <button id="kMinus" onclick="step('k',-1)">−</button>
+          <div class="count" id="kCount">0</div>
+          <button id="kPlus" onclick="step('k',1)">+</button>
+        </div>
+      </div>
+
+      <div class="total">
+        <div class="lbl">Total</div>
+        <div class="amt" id="totalAmt">₹500</div>
+      </div>
+
+      <div class="err" id="bookErr"></div>
+      <button class="btn" id="bookBtn" onclick="submitBooking()">Continue to payment</button>
+    </div>
+
+    <!-- ============ SCREEN 2: PAYMENT ============ -->
+    <div class="card hidden" id="screenPay">
+
+      <div class="pay-block">
+        <div class="pb-lbl">Pay this amount</div>
+        <div class="pb-amt" id="payAmtBig">₹0</div>
+      </div>
+
+      <div class="upi-block">
+        <div class="ub-lbl">To this UPI ID</div>
+        <div class="ub-id" id="upiIdText">nayansolankure-1@okaxis</div>
+        <button class="copy-btn" id="copyBtn" onclick="copyUpi()">Copy UPI ID</button>
+
+        <div class="ub-sep">or pay to this number</div>
+        <div class="ub-phone" id="upiPhoneText">0000000000</div>
+        <button class="copy-btn ghost-copy" id="copyPhoneBtn" onclick="copyPhone()">Copy number</button>
+
+        <div class="ub-name" id="upiNameText">Nayan Solankure</div>
+      </div>
+
+      <div class="ref-line">
+        Your booking reference<br><b id="payRef">BPB3-501</b>
+      </div>
+
+      <a class="btn green" id="waBtn" href="#" target="_blank">Send payment screenshot on WhatsApp</a>
+      <button class="btn ghost" onclick="showDone()">Done</button>
+    </div>
+
+    <!-- ============ SCREEN 3: DONE ============ -->
+    <div class="card hidden" id="screenDone">
+      <div class="done-icon">🎟️</div>
+      <div class="done-title">Booking received!</div>
+      <div class="done-text">
+        Reference: <b style="color:#e6b422;" id="doneRef">BPB3-501</b><br><br>
+        Our team is verifying your payment.<br>
+        Your e-pass will arrive on <b>WhatsApp</b> shortly after.<br><br>
+        See you on <b>6th September</b>!
+      </div>
+    </div>
+
+    <div style="max-width:420px;margin:24px auto 0;text-align:center;">
+      <a href="tel:+917719918989"
+         style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;
+                font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+                color:#e6b422;text-decoration:none;
+                background:rgba(201,162,39,.1);
+                border:1.5px solid rgba(201,162,39,.45);border-radius:12px;">
+        📞 Need help? Call Sisters Squad
+      </a>
+    </div>
+
+    <div class="footer">
+      Sisters Squad · Kolhapur<br>
+      Call: 7719918989 · 9371418988 &nbsp;|&nbsp; Instagram: @sisterssquad.kolhapur
+    </div>
+
+  </div>
+
+  <script>
+    // ================= CONFIG =================
+    const API       = 'https://script.google.com/macros/s/AKfycbxh3kl8PDG8PZZCYqoRI5ihv_6t3RP2NrgnWN2NoQCuK50CrmfBQBDUR22k0iTJEmkufg/exec';
+    const UPI_ID    = 'nayansolankure-1@okaxis';
+    const UPI_NAME  = 'Nayan Solankure';
+
+    // >>> REPLACE with the 10-digit number Nayan's UPI is registered to <<<
+    const UPI_PHONE = '7719918989';
+
+    const WHATSAPP  = '917719918989';
+    const PRICE_ADULT = 500, PRICE_KID = 200;
+    const MAX_ADULTS = 20, MAX_KIDS = 10;
+    // ==========================================
+
+    let adults = 1, kids = 0;
+
+    function step(which, delta) {
+      if (which === 'a') adults = Math.min(MAX_ADULTS, Math.max(1, adults + delta));
+      else               kids   = Math.min(MAX_KIDS,   Math.max(0, kids + delta));
+      render();
+    }
+
+    function render() {
+      document.getElementById('aCount').textContent = adults;
+      document.getElementById('kCount').textContent = kids;
+      document.getElementById('aMinus').disabled = adults <= 1;
+      document.getElementById('aPlus').disabled  = adults >= MAX_ADULTS;
+      document.getElementById('kMinus').disabled = kids <= 0;
+      document.getElementById('kPlus').disabled  = kids >= MAX_KIDS;
+      const total = adults * PRICE_ADULT + kids * PRICE_KID;
+      document.getElementById('totalAmt').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    function showErr(msg) {
+      const el = document.getElementById('bookErr');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function submitBooking() {
+      document.getElementById('bookErr').style.display = 'none';
+      const name  = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (name.length < 2)            return showErr('Please enter your full name');
+      if (!/^[0-9]{10}$/.test(phone)) return showErr('Please enter a 10-digit mobile number');
+
+      const btn = document.getElementById('bookBtn');
+      btn.disabled = true; btn.textContent = 'Reserving your booking...';
+
+      fetch(API, { method:'POST', body: JSON.stringify({ name, phone, email, adults, kids }) })
+        .then(r => r.json())
+        .then(res => {
+          if (!res.ok) { showErr(res.msg || 'Something went wrong, please try again'); resetBtn(); return; }
+          showPayment(res, name);
+        })
+        .catch(() => { showErr('Connection problem, please check internet and try again'); resetBtn(); });
+    }
+
+    function resetBtn() {
+      const btn = document.getElementById('bookBtn');
+      btn.disabled = false; btn.textContent = 'Continue to payment';
+    }
+
+    function showPayment(res, name) {
+      const amtStr = '₹' + res.amount.toLocaleString('en-IN');
+      document.getElementById('payAmtBig').textContent    = amtStr;
+      document.getElementById('payRef').textContent       = res.ref;
+      document.getElementById('doneRef').textContent      = res.ref;
+      document.getElementById('upiIdText').textContent    = UPI_ID;
+      document.getElementById('upiPhoneText').textContent = UPI_PHONE;
+      document.getElementById('upiNameText').textContent  = UPI_NAME;
+
+      const waMsg = 'Namaskar! Payment screenshot for booking ' + res.ref +
+                    ' (' + name + ', ' + amtStr + ') for बाईपण भारी नाईट 3.0';
+      document.getElementById('waBtn').href =
+        'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(waMsg);
+
+      document.getElementById('screenBook').classList.add('hidden');
+      document.getElementById('screenPay').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function copyText(text, btn, label) {
+      const done = function () {
+        btn.textContent = 'Copied!';
+        btn.classList.add('done');
+        setTimeout(function () {
+          btn.textContent = label;
+          btn.classList.remove('done');
+        }, 2500);
+      };
+      function fallbackCopy() {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+    }
+
+    function copyUpi() {
+      copyText(UPI_ID, document.getElementById('copyBtn'), 'Copy UPI ID');
+    }
+
+    function copyPhone() {
+      copyText(UPI_PHONE, document.getElementById('copyPhoneBtn'), 'Copy number');
+    }
+
+    function showDone() {
+      document.getElementById('screenPay').classList.add('hidden');
+      document.getElementById('screenDone').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ---------- Site-settings gate ----------
+    function checkPageEnabled() {
+      fetch(API + '?getsettings=1')
+        .then(r => r.json())
+        .then(function (s) {
+          document.getElementById('loadingGate').classList.add('hidden');
+          if (s.ok && s.booking_enabled === 'true') {
+            document.getElementById('pageContent').classList.remove('hidden');
+            render();
+          } else {
+            document.getElementById('closedMsg').classList.remove('hidden');
+          }
+        })
+        .catch(function () {
+          document.getElementById('loadingGate').classList.add('hidden');
+          document.getElementById('closedMsg').classList.remove('hidden');
+        });
+    }
+
+    checkPageEnabled();
+  </script>
 </body>
 </html>
