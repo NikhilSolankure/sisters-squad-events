@@ -3,288 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Team Booking · Sisters Squad</title>
+  <title>Team Booking Closed · Sisters Squad</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html { background:#12040a; min-height:100%; }
     body {
-      min-height:100vh; font-family:'Inter',sans-serif;
+      min-height:100vh;
+      font-family:'Inter',sans-serif;
       background:radial-gradient(ellipse at top, #3a0d1a 0%, #2b0a12 42%, #12040a 100%);
-      background-attachment:fixed; color:#f5e9da; padding:0 16px 48px;
+      color:#f5e9da;
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
       touch-action: manipulation;
     }
-    .gate { max-width:380px; margin:80px auto 0; text-align:center; }
-    .gate .lock { font-size:44px; }
-    .gate h1 { font-family:'Playfair Display',serif; font-size:26px; color:#e6b422; margin-top:14px; }
-    .gate p { font-size:13px; color:#c9b394; margin-top:8px; }
-    .gate input {
-      width:100%; margin-top:22px; padding:15px 16px; font-size:16px; text-align:center;
-      color:#f5e9da; background:rgba(0,0,0,.35); letter-spacing:2px;
-      border:1.5px solid rgba(201,162,39,.4); border-radius:12px; outline:none;
-    }
-    .gate input:focus { border-color:#e6b422; }
-    .gate button {
-      width:100%; margin-top:14px; padding:15px; font-size:16px; font-weight:700;
+    .box { max-width:420px; text-align:center; }
+    .box .org { font-size:11px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#c9a227; }
+    .box h1 { font-family:'Playfair Display',serif; font-size:28px; color:#e6b422; margin-top:14px; }
+    .box p { font-size:14px; color:#c9b394; margin-top:12px; line-height:1.6; }
+    .box a {
+      display:inline-block; margin-top:26px; padding:13px 28px; font-size:14px; font-weight:700;
       color:#2b0a12; background:linear-gradient(180deg,#f2ca5a,#e6b422);
-      border:none; border-radius:12px; cursor:pointer;
+      border-radius:12px; text-decoration:none;
     }
-    .gate .err { color:#ffb3b3; font-size:13px; margin-top:12px; display:none; }
-
-    .header { text-align:center; padding:30px 0 14px; }
-    .header .org { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#c9a227; }
-    .header h1 { font-family:'Playfair Display',serif; font-size:24px; color:#e6b422; margin-top:5px; }
-    .header .sub { font-size:12px; color:#c9b394; margin-top:6px; }
-
-    .card {
-      width:100%; max-width:420px; margin:18px auto 0;
-      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
-      border:1px solid rgba(201,162,39,.35); border-radius:22px; padding:24px 20px;
-    }
-    .field { margin-bottom:15px; }
-    .field label {
-      display:block; font-size:11px; font-weight:600; letter-spacing:1.5px;
-      text-transform:uppercase; color:#b39b74; margin-bottom:7px;
-    }
-    .field input {
-      width:100%; padding:14px 16px; font-size:16px; color:#f5e9da; background:rgba(0,0,0,.35);
-      border:1.5px solid rgba(201,162,39,.3); border-radius:12px; outline:none;
-    }
-    .field input:focus { border-color:#e6b422; }
-    .field input::placeholder { color:#7a6a55; }
-
-    .ticket-row {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:15px 4px; border-bottom:1px solid rgba(201,162,39,.15);
-    }
-    .ticket-row:last-of-type { border-bottom:none; }
-    .t-name { font-size:16px; font-weight:600; }
-    .t-price { font-size:13px; color:#c9a227; margin-top:3px; }
-    .stepper { display:flex; align-items:center; gap:14px; }
-    .stepper button {
-      width:40px; height:40px; border-radius:50%; font-size:20px; font-weight:600; cursor:pointer;
-      color:#e6b422; background:transparent; border:1.5px solid rgba(201,162,39,.5);
-    }
-    .stepper button:disabled { opacity:.25; }
-    .stepper .count { min-width:26px; text-align:center; font-size:20px; font-weight:700; color:#fff; }
-
-    .total {
-      margin-top:16px; padding:18px; background:rgba(201,162,39,.08);
-      border:1px solid rgba(201,162,39,.35); border-radius:14px;
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    .total .lbl { font-size:13px; letter-spacing:2px; text-transform:uppercase; color:#b39b74; }
-    .total .amt { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; color:#e6b422; }
-
-    .btn {
-      display:block; width:100%; margin-top:18px; padding:16px; font-size:16px; font-weight:700;
-      text-align:center; color:#2b0a12; background:linear-gradient(180deg,#f2ca5a,#e6b422);
-      border:none; border-radius:14px; cursor:pointer; text-decoration:none;
-    }
-    .btn.green { color:#fff; background:linear-gradient(180deg,#3ec468,#25a052); }
-    .btn.ghost { background:transparent; color:#e6b422; border:1.5px solid rgba(201,162,39,.5); }
-    .btn:disabled { opacity:.6; }
-    .err {
-      margin-top:14px; padding:12px 16px; border-radius:10px; background:rgba(163,36,36,.25);
-      border:1px solid rgba(220,80,80,.5); color:#ffd9d9; font-size:14px; text-align:center; display:none;
-    }
-
-    .success { text-align:center; }
-    .success .tick { font-size:52px; }
-    .success h2 { font-family:'Playfair Display',serif; font-size:24px; color:#7fe0a0; margin-top:10px; }
-    .success .ref {
-      font-family:'Playfair Display',serif; font-size:26px; color:#e6b422; margin-top:14px; letter-spacing:2px;
-    }
-    .success .detail { font-size:14px; color:#d8c3a5; margin-top:8px; line-height:1.7; }
-    .spin { animation:rot 1s linear infinite; display:inline-block; }
-    @keyframes rot { to { transform:rotate(360deg); } }
-    .hidden { display:none; }
-    .footer { margin-top:26px; font-size:11px; color:#8a7358; text-align:center; }
   </style>
 </head>
 <body>
-
-  <div class="gate" id="gate">
-    <div class="lock">🔐</div>
-    <h1>Team Booking</h1>
-    <p>बाईपण भारी नाईट 3.0<br>For phone bookings by team only</p>
-    <input id="pw" type="password" placeholder="Team password" onkeydown="if(event.key==='Enter')login()">
-    <button onclick="login()">Open</button>
-    <div class="err" id="gateErr">Wrong password</div>
+  <div class="box">
+    <div class="org">Sisters Squad · Team</div>
+    <h1>Phone booking tool is closed</h1>
+    <p>The event has concluded, so there is nothing to book by phone right now. This tool will be reopened for a future event when needed.</p>
+    <a href="/">Back to home</a>
   </div>
-
-  <div id="app" class="hidden">
-    <div class="header">
-      <div class="org">Sisters Squad · Team Only</div>
-      <h1>New Phone Booking</h1>
-      <div class="sub">Fill during the call — pass generates instantly</div>
-    </div>
-
-    <div class="card" id="formCard">
-      <div class="field">
-        <label>Customer name (on the pass)</label>
-        <input id="name" placeholder="e.g. Sunita Patil">
-      </div>
-      <div class="field">
-        <label>Mobile (WhatsApp)</label>
-        <input id="phone" placeholder="10-digit number" inputmode="numeric" maxlength="10">
-      </div>
-      <div class="field">
-        <label>Email (optional)</label>
-        <input id="email" placeholder="Only if customer gives one" inputmode="email">
-      </div>
-
-      <div class="ticket-row">
-        <div><div class="t-name">Adult</div><div class="t-price">₹500 each</div></div>
-        <div class="stepper">
-          <button id="aMinus" onclick="step('a',-1)">−</button>
-          <div class="count" id="aCount">1</div>
-          <button id="aPlus" onclick="step('a',1)">+</button>
-        </div>
-      </div>
-      <div class="ticket-row">
-        <div><div class="t-name">Kid</div><div class="t-price">₹200 each</div></div>
-        <div class="stepper">
-          <button id="kMinus" onclick="step('k',-1)">−</button>
-          <div class="count" id="kCount">0</div>
-          <button id="kPlus" onclick="step('k',1)">+</button>
-        </div>
-      </div>
-
-      <div class="total">
-        <div class="lbl">Amount to collect</div>
-        <div class="amt" id="totalAmt">₹500</div>
-      </div>
-
-      <div class="err" id="bookErr"></div>
-      <button class="btn" id="bookBtn" onclick="submitBooking()">Create pass</button>
-    </div>
-
-    <div class="card hidden" id="successCard">
-      <div class="success">
-        <div class="tick">🎟️</div>
-        <h2>Pass created!</h2>
-        <div class="ref" id="sRef">BPB3-501</div>
-        <div class="detail" id="sDetail"></div>
-        <a class="btn green" id="waBtn" href="#" target="_blank">Send pass on WhatsApp</a>
-        <button class="btn ghost" onclick="reset()">+ New booking</button>
-      </div>
-    </div>
-
-    <div class="footer">Sisters Squad · Kolhapur</div>
-  </div>
-
-  <script>
-    // ================= CONFIG =================
-    const API = 'https://script.google.com/macros/s/AKfycbxh3kl8PDG8PZZCYqoRI5ihv_6t3RP2NrgnWN2NoQCuK50CrmfBQBDUR22k0iTJEmkufg/exec';
-    // ==========================================
-    const PRICE_ADULT = 500, PRICE_KID = 200, MAX_ADULTS = 20, MAX_KIDS = 10;
-    let PW = '', adults = 1, kids = 0;
-
-    function login() {
-      const pw = document.getElementById('pw').value.trim();
-      if (!pw) return;
-      document.querySelector('.gate button').textContent = 'Checking…';
-      fetch(API + '?action=stats&pw=' + encodeURIComponent(pw))
-        .then(r => r.json())
-        .then(res => {
-          if (!res.ok) { document.getElementById('gateErr').style.display='block';
-            document.querySelector('.gate button').textContent='Open'; return; }
-          PW = pw;
-          try { sessionStorage.setItem('bpb3pw', pw); } catch(e){}
-          document.getElementById('gate').classList.add('hidden');
-          document.getElementById('app').classList.remove('hidden');
-        })
-        .catch(() => { document.getElementById('gateErr').textContent='Connection problem';
-          document.getElementById('gateErr').style.display='block';
-          document.querySelector('.gate button').textContent='Open'; });
-    }
-
-    function step(w, d) {
-      if (w==='a') adults = Math.min(MAX_ADULTS, Math.max(1, adults+d));
-      else         kids   = Math.min(MAX_KIDS,   Math.max(0, kids+d));
-      render();
-    }
-    function render() {
-      document.getElementById('aCount').textContent = adults;
-      document.getElementById('kCount').textContent = kids;
-      document.getElementById('aMinus').disabled = adults<=1;
-      document.getElementById('aPlus').disabled  = adults>=MAX_ADULTS;
-      document.getElementById('kMinus').disabled = kids<=0;
-      document.getElementById('kPlus').disabled  = kids>=MAX_KIDS;
-      document.getElementById('totalAmt').textContent =
-        '₹' + (adults*PRICE_ADULT + kids*PRICE_KID).toLocaleString('en-IN');
-    }
-    function showErr(m){ const e=document.getElementById('bookErr'); e.textContent=m; e.style.display='block'; }
-
-    function submitBooking() {
-      document.getElementById('bookErr').style.display='none';
-      const name=document.getElementById('name').value.trim();
-      const phone=document.getElementById('phone').value.trim();
-      const email=document.getElementById('email').value.trim();
-      if (name.length<2) return showErr('Enter customer name');
-      if (!/^[0-9]{10}$/.test(phone)) return showErr('Enter 10-digit mobile number');
-
-      const btn=document.getElementById('bookBtn');
-      btn.disabled=true; btn.innerHTML='<span class="spin">⏳</span> Creating pass… (15 sec)';
-
-      fetch(API, { method:'POST', body: JSON.stringify({ name, phone, email, adults, kids, internal:true }) })
-        .then(r => r.json())
-        .then(res => {
-          if (!res.ok) { showErr(res.msg||'Failed — try again');
-            btn.disabled=false; btn.textContent='Create pass'; return; }
-          showSuccess(res, name, phone);
-        })
-        .catch(() => { showErr('Connection problem — try again');
-          btn.disabled=false; btn.textContent='Create pass'; });
-    }
-
-    function showSuccess(res, name, phone) {
-      const admits = adults + kids;
-
-      const parts = [];
-      if (adults > 0) parts.push(adults + ' Adult' + (adults > 1 ? 's' : ''));
-      if (kids > 0)   parts.push(kids + ' Kid' + (kids > 1 ? 's' : ''));
-      const admitStr = 'Admit ' + admits + ' (' + parts.join(' + ') + ')';
-
-      document.getElementById('sRef').textContent = res.ref;
-      document.getElementById('sDetail').innerHTML =
-        name + '<br>' + admitStr + '<br>Collect ₹' + res.amount.toLocaleString('en-IN');
-
-      const GROUP_LINK = 'https://chat.whatsapp.com/J1vVGtzw5pp1DStfUR4ihy?s=cl&p=a&ilr=1';
-      const passPart = res.passUrl ? res.passUrl : '(pass link is being prepared, resend from dashboard if missing)';
-      const waMsg =
-        'Namaskar ' + name + '!\n' +
-        '*Your booking for \u092C\u093E\u0908\u092A\u0923 \u092D\u093E\u0930\u0940 \u0928\u093E\u0908\u091F 3.0 is confirmed !*\n\n' +
-        '*Ticket ID:* ' + res.ref + '\n' +
-        '*' + admitStr + '*\n\n' +
-        '*Click below \uD83D\uDC47 to download Your e-pass:* ' + passPart + '\n\n' +
-        '\uD83C\uDFAB *Please show this pass at the entry*\n\n' +
-        '\uD83D\uDCE3 *Important:*\n' +
-        'All ticket holders are requested to join our official WhatsApp group to receive all important updates, announcements & event information.\n\n' +
-        '\uD83D\uDC49 *Join the WhatsApp Group:*\n' + GROUP_LINK + '\n\n' +
-        'See you there!\n' +
-        '        - TEAM SISTERS SQUAD';
-
-      document.getElementById('waBtn').href = 'https://wa.me/91' + phone + '?text=' + encodeURIComponent(waMsg);
-      document.getElementById('formCard').classList.add('hidden');
-      document.getElementById('successCard').classList.remove('hidden');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-
-    function reset() {
-      document.getElementById('name').value='';
-      document.getElementById('phone').value='';
-      document.getElementById('email').value='';
-      adults=1; kids=0; render();
-      document.getElementById('bookBtn').disabled=false;
-      document.getElementById('bookBtn').textContent='Create pass';
-      document.getElementById('successCard').classList.add('hidden');
-      document.getElementById('formCard').classList.remove('hidden');
-    }
-
-    (function(){ let s=''; try{s=sessionStorage.getItem('bpb3pw')||'';}catch(e){}
-      if(s){ document.getElementById('pw').value=s; login(); } render(); })();
-  </script>
 </body>
 </html>
